@@ -4,14 +4,19 @@
   "description": "API REST de ejemplo para PDM0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "keywords": [],
   "author": "Ernesto Aguilar",
   "private": true,
   "dependencies": {
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "knex": "^0.95.11",
     "pg": "^8.7.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.13"
   }
 }
