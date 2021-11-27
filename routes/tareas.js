@@ -1,7 +1,10 @@
 const { Router } = require('express');
 const tareasController = require('../controllers/tareas');
+const jwt = require('express-jwt');
 
 const router = Router();
+
+router.use(jwt({ secret: process.env.JWT_SECRET, algorithms: ['HS256'] }));
 
 router.get('', tareasController.listarTareas);
 

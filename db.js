@@ -1,14 +1,17 @@
 const knex = require('knex');
+const knexStringcase = require('knex-stringcase');
 
-const db = knex({
-  client: 'pg',
-  connection: {
-    connectionString: process.env.DATABASE_URL,
-    ssl:
-      process.env.NODE_ENV === 'production'
-        ? { rejectUnauthorized: false }
-        : undefined,
-  },
-});
+const db = knex(
+  knexStringcase({
+    client: 'pg',
+    connection: {
+      connectionString: process.env.DATABASE_URL,
+      ssl:
+        process.env.NODE_ENV === 'production'
+          ? { rejectUnauthorized: false }
+          : undefined,
+    },
+  })
+);
 
 module.exports = db;

@@ -1,8 +1,10 @@
 const db = require('../db');
 
 const listarTareas = async (req, res) => {
+  const usuarioId = req.user.id;
+  console.log(req.user);
   try {
-    const tareas = await db('tareas').select();
+    const tareas = await db('tareas').select().where({ usuarioId: usuarioId });
     res.status(200).send(tareas);
   } catch (error) {
     res.status(500).send({
@@ -16,6 +18,7 @@ const crearTarea = async (req, res) => {
   const titulo = req.body.titulo;
   const descripcion = req.body.descripcion || '';
   const completada = req.body.completada || false;
+  const usuarioId = req.user.id;
   if (!titulo)
     return res
       .status(400)
@@ -27,6 +30,7 @@ const crearTarea = async (req, res) => {
         titulo: titulo,
         descripcion: descripcion,
         completada: completada,
+        usuarioId: usuarioId,
       })
       .returning('*');
 
@@ -40,9 +44,12 @@ const crearTarea = async (req, res) => {
 };
 
 const modificarTarea = async (req, res) => {
+  const usuarioId = req.user.id;
   const id = Number(req.params.id) || -1;
   try {
-    const tareaAModificar = await db('tareas').first().where({ id: id });
+    const tareaAModificar = await db('tareas')
+      .first()
+      .where({ id: id, usuarioId: usuarioId });
     if (!tareaAModificar)
       return res.status(404).send({
         status: 404,
@@ -64,7 +71,7 @@ const modificarTarea = async (req, res) => {
         descripcion: tareaAModificar.descripcion,
         completada: tareaAModificar.completada,
       })
-      .where({ id: id })
+      .where({ id: id, usuarioId: usuarioId })
       .returning('*');
 
     res.status(200).send(tareas[0]);
@@ -77,16 +84,19 @@ const modificarTarea = async (req, res) => {
 };
 
 const borrarTarea = async (req, res) => {
+  const usuarioId = req.user.id;
   const id = Number(req.params.id) || -1;
   try {
-    const tareaABorrar = await db('tareas').first().where({ id: id });
+    const tareaABorrar = await db('tareas')
+      .first()
+      .where({ id: id, usuarioId: usuarioId });
     if (!tareaABorrar)
       return res.status(404).send({
         status: 404,
         message: 'La tarea con id ' + id + ' no existe.',
       });
 
-    await db('tareas').delete().where({ id: id });
+    await db('tareas').delete().where({ id: id, usuarioId: usuarioId });
 
     res.status(204).send();
   } catch (err) {
