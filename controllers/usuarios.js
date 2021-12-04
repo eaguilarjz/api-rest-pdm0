@@ -6,7 +6,7 @@ const generarToken = usuario => {
   const token = sign(
     { id: usuario.id, email: usuario.email },
     process.env.JWT_SECRET,
-    { expiresIn: '1h' }
+    { expiresIn: '15s' }
   );
 
   return token;
